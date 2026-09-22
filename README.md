@@ -1,1 +1,0 @@
-# walimatulurus.github.io
