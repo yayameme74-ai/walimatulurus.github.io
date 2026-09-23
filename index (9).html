@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="ms" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Walimatulurus Aiman & Erna | 02.01.2027</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        blush: {
+                            50: '#FFF0F3',
+                            100: '#FFE5EC',
+                            200: '#FFCAD4',
+                            300: '#F4C2C2',
+                            400: '#E8A598',
+                            500: '#D88373',
+                            600: '#B85B4B',
+                        },
+                        dusty: {
+                            100: '#F5EBEB',
+                            200: '#E8D5D5',
+                            300: '#D3B5B5',
+                            400: '#B88E8E',
+                            500: '#9C6B6B',
+                            600: '#7F4F4F',
+                        },
+                        gold: {
+                            300: '#F3E5AB',
+                            400: '#D4AF37',
+                            500: '#AA7C11',
+                            600: '#8B6508',
+                        },
+                        rosewood: '#5C2D2D',
+                        cream: '#FFFDF9',
+                    },
+                    fontFamily: {
+                        serif: ['Cormorant Garamond', 'Playfair Display', 'serif'],
+                        sans: ['Plus Jakarta Sans', 'Montserrat', 'sans-serif'],
+                        script: ['Parisienne', 'cursive']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Google Fonts & FontAwesome -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Parisienne&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- YouTube Iframe API -->
+    <script src="https://www.youtube.com/iframe_api"></script>
+
+    <!-- Firebase App (Compat) & Firestore -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+
+    <style>
+        /* Sembunyikan scrollbar untuk galeri swipe gaya Instagram */
+             .no-scrollbar::-webkit-scrollbar {
+             display: none;
+        }
+             .no-scrollbar {
+             -ms-overflow-style: none;
+             scrollbar-width: none;
+        }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #FFFDF9;
+            color: #4A3535;
+        }
+        .font-script {
+            font-family: 'Parisienne', cursive;
+        }
+        .font-serif-cormorant {
+            font-family: 'Cormorant Garamond', serif;
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #FFFDF9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #F4C2C2;
+            border-radius: 4px;
+        }
+        
+        /* Soundwave Bar Animation */
+        .bar {
+            width: 3px;
+            height: 12px;
+            background-color: #D88373;
+            display: inline-block;
+            border-radius: 2px;
+            animation: bounce 1.2s ease-in-out infinite alternate;
+        }
+        .bar:nth-child(2) { animation-delay: 0.2s; }
+        .bar:nth-child(3) { animation-delay: 0.4s; }
+        .bar:nth-child(4) { animation-delay: 0.6s; }
+
+        @keyframes bounce {
+            0% { height: 4px; }
+            100% { height: 16px; }
+        }
+        .paused .bar {
+            animation-play-state: paused;
+            height: 4px;
+        }
+
+        .gold-gradient-text {
+            background: linear-gradient(135deg, #AA7C11 0%, #D4AF37 50%, #8B6508 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .envelope-shadow {
+            box-shadow: 0 20px 40px -15px rgba(216, 131, 115, 0.25);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-blush-200 selection:text-rosewood relative overflow-x-hidden">
+
+    <canvas id="petalCanvas" class="fixed inset-0 pointer-events-none z-20 w-full h-full"></canvas>
+
+    <!-- Hidden Audio Player Elements -->
+    <div class="hidden">
+        <div id="ytAudioPlayer"></div>
+        <audio id="backupAudio" loop preload="auto">
+            <source src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-wedding-piano-112191.mp3" type="audio/mpeg">
+        </audio>
+    </div>
+
+    <!-- Opening Overlay -->
+    <div id="openingOverlay" class="fixed inset-0 z-50 bg-gradient-to-b from-blush-50 via-cream to-blush-100 flex flex-col items-center justify-center p-4 transition-all duration-700">
+
+        <div class="max-w-md w-full bg-white/90 backdrop-blur-md rounded-3xl p-8 border border-gold-300 text-center shadow-2xl envelope-shadow relative overflow-hidden">
+            <div class="absolute -top-12 -right-12 w-32 h-32 bg-blush-100 rounded-full blur-2xl pointer-events-none"></div>
+            
+            <div class="w-32 h-32 mx-auto mb-6 relative flex items-center justify-center">
+                <svg viewBox="0 0 200 200" class="w-full h-full text-gold-500">
+                    <circle cx="100" cy="100" r="85" fill="none" stroke="#D4AF37" stroke-width="1.5" stroke-dasharray="280 40" />
+                    <path d="M 35 120 C 25 80, 50 40, 95 30" fill="none" stroke="#AA7C11" stroke-width="1.5" stroke-linecap="round" />
+                    <path d="M 40 100 Q 30 95, 33 88 Q 42 92, 40 100 Z" fill="#D4AF37" />
+                    <path d="M 48 82 Q 38 75, 43 68 Q 50 74, 48 82 Z" fill="#D4AF37" />
+                    <path d="M 62 62 Q 52 53, 58 47 Q 65 53, 62 62 Z" fill="#D4AF37" />
+                    <path d="M 78 45 Q 70 34, 78 30 Q 82 38, 78 45 Z" fill="#D4AF37" />
+                </svg>
+                <div class="absolute inset-0 flex items-center justify-center pt-1">
+                    <span class="font-serif-cormorant text-4xl font-semibold gold-gradient-text">A<span class="font-script text-3xl text-blush-500">&</span>E</span>
+                </div>
+            </div>
+
+            <span class="block uppercase tracking-[0.25em] text-[11px] font-semibold text-dusty-400 mb-2">Meraikan Cinta <br>Apabila dua takdir bertemu dalam satu janji sehidup semati</span>
+            <h1 class="font-script text-6xl text-rosewood mb-2">Aiman <span class="font-serif-cormorant text-blush-500 font-light">&</span> Erna</h1>
+            <p class="font-serif-cormorant text-sm italic text-dusty-500 mb-6">Sabtu, 02 Januari 2027</p>
+
+            <button onclick="openInvitation()" class="w-full bg-gradient-to-r from-blush-400 via-blush-500 to-dusty-500 hover:opacity-95 text-white font-semibold py-3.5 px-6 rounded-full shadow-lg transition duration-300 flex items-center justify-center gap-2 text-xs uppercase tracking-widest group">
+                <i class="fa-solid fa-envelope-open text-sm group-hover:scale-110 transition-transform"></i> Buka
+            </button>
+        </div>
+    </div>
+
+    <!-- Music Player Floating Widget -->
+    <div class="fixed bottom-5 left-5 z-40 flex items-center gap-3 bg-white/95 backdrop-blur-md px-4 py-2.5 rounded-full border border-blush-300 shadow-xl text-rosewood">
+        <button id="musicToggleBtn" onclick="toggleMusic()" class="w-10 h-10 rounded-full bg-blush-400 text-white border border-blush-300 flex items-center justify-center hover:bg-blush-500 transition focus:outline-none shadow-md">
+            <i class="fa-solid fa-play text-xs ml-0.5" id="musicPlayIcon"></i>
+        </button>
+        <div class="hidden sm:block text-xs">
+            <p id="songTitle" class="font-bold text-rosewood line-clamp-1">Satu Shaf Di Belakangku</p>
+            <p class="text-[10px] text-dusty-500">Arvian Dwi • <span id="musicStatusText" class="text-blush-500 font-semibold">Tekan untuk mainkan</span></p>
+        </div>
+        <div id="soundWave" class="flex items-center gap-1 px-1 paused">
+            <span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span>
+        </div>
+    </div>
+
+    <!-- Navigation Bar -->
+    <nav class="sticky top-0 z-30 bg-white/90 backdrop-blur-md border-b border-blush-200 shadow-sm">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
+            <a href="#" class="flex items-center gap-2">
+                <div class="w-10 h-10 rounded-full border border-gold-400 p-0.5 flex items-center justify-center bg-cream">
+                    <span class="font-serif-cormorant font-bold gold-gradient-text text-sm">A&E</span>
+                </div>
+                <span class="font-serif-cormorant text-xl font-bold tracking-wider text-rosewood">Aiman & Erna</span>
+            </a>
+            
+            <div class="hidden md:flex space-x-6 text-xs font-medium uppercase tracking-widest text-dusty-500">
+                <a href="#hero" class="hover:text-blush-500 transition">Utama</a>
+                <a href="#rsvp" class="hover:text-blush-500 transition">Titipan Doa & Ucapan</a>
+                <a href="#upload" class="hover:text-blush-500 transition">Muat Naik</a>
+                <a href="#gallery" class="hover:text-blush-500 transition">Galeri Gambar</a>
+            </div>
+
+            <a href="#upload" class="bg-blush-400 hover:bg-blush-500 text-white font-semibold text-xs px-4 py-2 rounded-full shadow-md transition flex items-center gap-1.5">
+                <i class="fa-solid fa-camera"></i> <span class="hidden sm:inline">Muat Naik</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="hero" class="relative py-16 md:py-24 px-4 text-center overflow-hidden bg-gradient-to-b from-blush-50 via-cream to-cream z-10">
+        <div class="max-w-3xl mx-auto relative z-10">
+            <div class="mb-6 inline-block relative">
+                <div class="w-36 h-36 md:w-44 md:h-44 rounded-full border border-gold-300 p-2 flex items-center justify-center mx-auto bg-white/80 shadow-md relative">
+                    <svg viewBox="0 0 200 200" class="w-full h-full text-gold-500 absolute inset-0 p-1">
+                        <circle cx="100" cy="100" r="90" fill="none" stroke="#D4AF37" stroke-width="1" stroke-dasharray="8 4" />
+                        <path d="M 25 125 C 15 75, 45 30, 100 20" fill="none" stroke="#AA7C11" stroke-width="1.5" stroke-linecap="round" />
+                    </svg>
+                    <div class="flex flex-col items-center justify-center z-10">
+                        <span class="font-serif-cormorant text-5xl md:text-6xl font-semibold gold-gradient-text leading-none">A<span class="font-script text-3xl md:text-4xl text-blush-500">&</span>E</span>
+                        <span class="text-[9px] uppercase tracking-[0.2em] text-dusty-400 font-bold mt-1">02 • 01 • 2027</span>
+                    </div>
+                </div>
+            </div>
+
+            <span class="block uppercase tracking-[0.3em] text-xs font-semibold text-dusty-400 mb-2">Dua jiwa, dua cerita <br>kini digabungkan menjadi satu takdir yang indah</span>
+            <h1 class="font-script text-7xl md:text-9xl text-rosewood mb-2">Aiman <span class="text-blush-400 font-serif-cormorant font-light text-5xl md:text-7xl">&</span> Erna</h1>
+            <p class="font-serif-cormorant italic text-lg md:text-2xl text-dusty-500 mb-8">"Dan Kami menciptakan kamu berpasang-pasangan"<br><span class="text-xs font-sans not-italic text-dusty-400">(Surah An-Naba': 8)</span></p>
+
+            <div class="inline-flex items-center gap-2 bg-white/90 border border-blush-200 px-6 py-2.5 rounded-full text-xs md:text-sm text-dusty-600 mb-10 shadow-sm">
+                <i class="fa-regular fa-calendar text-blush-400"></i>
+                <span class="font-semibold">Sabtu, 2 Januari 2027</span>
+                <span class="text-blush-300">•</span>
+                <i class="fa-solid fa-location-dot text-blush-400"></i>
+                <span>Dewan Kejora Bandar Tenggara, Johor</span>
+            </div>
+
+            <!-- Countdown Timer -->
+            <div class="mb-10 max-w-md mx-auto">
+                <p class="text-[11px] uppercase tracking-widest text-dusty-400 font-semibold mb-3">Menghitung Hari Bahagia</p>
+                <div class="grid grid-cols-4 gap-2 md:gap-3 text-center">
+                    <div class="bg-white border border-blush-200 p-3 rounded-2xl shadow-sm">
+                        <span id="cd-days" class="font-serif-cormorant text-2xl md:text-3xl font-bold text-rosewood block">00</span>
+                        <span class="text-[10px] text-dusty-400 uppercase font-medium">Hari</span>
+                    </div>
+                    <div class="bg-white border border-blush-200 p-3 rounded-2xl shadow-sm">
+                        <span id="cd-hours" class="font-serif-cormorant text-2xl md:text-3xl font-bold text-rosewood block">00</span>
+                        <span class="text-[10px] text-dusty-400 uppercase font-medium">Jam</span>
+                    </div>
+                    <div class="bg-white border border-blush-200 p-3 rounded-2xl shadow-sm">
+                        <span id="cd-minutes" class="font-serif-cormorant text-2xl md:text-3xl font-bold text-rosewood block">00</span>
+                        <span class="text-[10px] text-dusty-400 uppercase font-medium">Minit</span>
+                    </div>
+                    <div class="bg-white border border-blush-200 p-3 rounded-2xl shadow-sm">
+                        <span id="cd-seconds" class="font-serif-cormorant text-2xl md:text-3xl font-bold text-rosewood block">00</span>
+                        <span class="text-[10px] text-dusty-400 uppercase font-medium">Saat</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Seksyen Doa Pengantin -->
+    <section class="py-12 px-4 max-w-4xl mx-auto w-full z-10 relative text-center">
+        <div class="bg-white/95 backdrop-blur-sm rounded-3xl p-6 md:p-10 border border-blush-200 shadow-sm space-y-4">
+            <div class="text-center my-4">
+                <p class="font-serif-cormorant text-2xl md:text-3xl text-rosewood tracking-wide drop-shadow-sm">
+                    بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
+                </p>
+            </div>
+                
+            <div class="font-serif-cormorant italic text-sm md:text-base text-dusty-600 space-y-3 leading-relaxed">
+                <p>"Ya Allah Ya Tuhan Kami, Engkau berkatilah majlis ini dan satukanlah hati</p>
+                <p><strong>Aiman dan Erna</strong></p>
+                <p>Seperti Engkau satukan hati Adam dan Hawa, Yusof dan Zulaikha dan seperti Engkau satukan hati Muhammad S.A.W. dan Siti Khadijah.</p>
+                <p>Satukanlah hati kedua mempelai ini dengan iman, keyakinan dan tawakal kepadaMu.</p>
+                <p>Semoga kehidupan mereka dipenuhi Al-Mawwadah dan Al-Rahmah di dunia dan akhirat."</p>
+            </div>
+
+            <div class="pt-2">
+                <span class="font-serif-cormorant font-bold text-rosewood text-sm tracking-widest uppercase">Amin Ya Rabbal 'Alamin</span>
+            </div>
+        </div>
+    </section>
+    
+    <!-- RSVP & Wishes Section -->
+    <section id="rsvp" class="py-12 px-4 max-w-4xl mx-auto w-full z-10 relative">
+        <div class="bg-white/95 backdrop-blur-sm rounded-3xl p-6 md:p-10 border border-blush-200 shadow-md">
+            <div class="text-center mb-8">
+                <h2 class="font-serif-cormorant text-3xl text-rosewood font-bold mt-1">Titipan Doa & Ucapan</h2>
+                <p class="text-dusty-400 text-xs md:text-sm mt-1">Sila lengkapkan butiran di bawah untuk ucapan dan doa.</p>
+            </div>
+
+            <form id="rsvpWishForm" class="space-y-4 mb-8 bg-cream p-5 md:p-6 rounded-2xl border border-blush-200">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-dusty-500 mb-1">Nama Tetamu <span class="text-blush-500">*</span></label>
+                        <input type="text" id="rsvpName" required placeholder="Nama Anda / Keluarga" class="w-full px-4 py-2.5 rounded-xl bg-white border border-blush-200 text-rosewood text-sm outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-dusty-500 mb-1">Bilangan Tetamu (Pax)</label>
+                        <select id="rsvpCount" class="w-full px-4 py-2.5 rounded-xl bg-white border border-blush-200 text-rosewood text-sm outline-none">
+                            <option value="1 Orang">1 Orang</option>
+                            <option value="2 Orang">2 Orang</option>
+                            <option value="3-4 Orang">3-4 Orang</option>
+                            <option value="5+ Orang">5+ Orang (Keluarga)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-dusty-500 mb-1">Doa / Ucapan Buat Pengantin <span class="text-blush-500">*</span></label>
+                    <textarea id="rsvpWishText" rows="3" required placeholder="Tuliskan ucapan atau doa ikhlas anda..." class="w-full px-4 py-2.5 rounded-xl bg-white border border-blush-200 text-rosewood text-sm outline-none resize-none"></textarea>
+                </div>
+
+                <button type="submit" id="wishSubmitBtn" class="w-full bg-blush-400 hover:bg-blush-500 text-white font-bold py-3.5 px-6 rounded-xl transition shadow-sm flex items-center justify-center gap-2 text-xs uppercase tracking-wider">
+                    <i class="fa-solid fa-paper-plane"></i> Hantar Ucapan
+                </button>
+            </form>
+
+            <div class="border-t border-blush-100 pt-6">
+                <h3 class="font-serif-cormorant font-bold text-xl text-rosewood mb-4">Senarai Ucapan Tetamu</h3>
+                <div id="wishesList" class="space-y-3 max-h-72 overflow-y-auto pr-2"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Upload Section -->
+    <section id="upload" class="py-12 px-4 max-w-4xl mx-auto w-full z-10 relative">
+        <div class="bg-white/95 backdrop-blur-sm rounded-3xl p-6 md:p-10 shadow-md border border-blush-200">
+            <div class="text-center mb-8">
+                <span class="text-blush-400 text-xs font-semibold uppercase tracking-widest">Kenangan Tetamu</span>
+                <h2 class="font-serif-cormorant text-3xl text-rosewood font-bold mt-1">Muat Naik Gambar Majlis</h2>
+                <p class="text-dusty-400 text-xs md:text-sm mt-1">Kongsi moment & foto menarik yang anda ambil sepanjang majlis ini berlangsung.</p>
+            </div>
+
+            <!-- Borang yang disokong: Atribut 'multiple' ditambah supaya boleh pilih banyak fail serentak -->
+            <form id="uploadForm" class="space-y-6" onsubmit="uploadToTelegram(event)">
+                <div id="dropZone" class="border-2 border-dashed border-blush-300 rounded-2xl p-8 text-center bg-blush-50/50 hover:bg-blush-50 transition cursor-pointer relative group">
+                    <input type="file" id="fileInput" accept="image/*" multiple required class="hidden">
+                    
+                    <div id="uploadPrompt" class="space-y-3">
+                        <div class="w-14 h-14 bg-white text-blush-400 rounded-full border border-blush-200 flex items-center justify-center mx-auto text-xl shadow-sm group-hover:scale-105 transition">
+                            <i class="fa-solid fa-camera-retro"></i>
+                        </div>
+                        <div>
+                            <p class="font-medium text-rosewood text-sm">Tekan untuk pilih <span class="text-blush-500 font-bold underline">banyak gambar</span> serentak atau tarik ke sini</p>
+                        </div>
+                    </div>
+
+                    <div id="previewContainer" class="hidden grid grid-cols-2 sm:grid-cols-4 gap-3 mt-2"></div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-dusty-500 mb-1">Nama Anda / Keluarga *</label>
+                        <input type="text" id="guestName" required placeholder="Contoh: Sarah & Hafiz" class="w-full px-4 py-3 rounded-xl border border-blush-200 bg-cream text-rosewood text-sm outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-dusty-500 mb-1">Kategori Gambar</label>
+                        <select id="guestCategory" class="w-full px-4 py-3 rounded-xl border border-blush-200 bg-cream text-rosewood text-sm outline-none">
+                            <option value="Majlis Nikah">Majlis Nikah</option>
+                            <option value="Resepsi">Resepsi</option>
+                            <option value="Bersama Pengantin">Bersama Pengantin</option>
+                            <option value="Tetamu">Tetamu & Suasana</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-dusty-500 mb-1">Kapsyen Ringkas</label>
+                    <input type="text" id="guestMessage" placeholder="Contoh: Selamat Pengantin Baru Aiman & Erna!" class="w-full px-4 py-3 rounded-xl border border-blush-200 bg-cream text-rosewood text-sm outline-none">
+                </div>
+
+                <button type="submit" id="submitBtn" class="w-full bg-blush-400 hover:bg-blush-500 text-white font-bold py-3.5 px-6 rounded-xl shadow-md transition flex items-center justify-center gap-2 text-xs uppercase tracking-wider">
+                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                    <span>Muat Naik Ke Galeri Awam</span>
+                </button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section id="gallery" class="py-12 px-4 max-w-6xl mx-auto w-full z-10 relative">
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 border-b border-blush-200 pb-4">
+            <div>
+                <span class="text-blush-400 font-semibold text-xs uppercase tracking-widest">Galeri Awam</span>
+                <h2 class="font-serif-cormorant text-3xl text-rosewood font-bold">Kenangan Indah Majlis</h2>
+            </div>
+            <div class="mt-4 md:mt-0 flex items-center gap-3">
+                <span class="text-xs text-dusty-500"><span id="photoCount" class="font-bold text-blush-500">0</span> gambar dikongsi</span>
+            </div>
+        </div>
+
+        <!-- Filter Buttons -->
+        <div class="flex flex-wrap gap-2 mb-8 text-xs">
+            <button onclick="filterPhotos('Semua')" class="filter-btn bg-blush-400 text-white px-4 py-2 rounded-full font-bold shadow-sm">Semua</button>
+            <button onclick="filterPhotos('Majlis Nikah')" class="filter-btn bg-white text-dusty-500 border border-blush-200 hover:text-blush-500 px-4 py-2 rounded-full font-medium">Majlis Nikah</button>
+            <button onclick="filterPhotos('Resepsi')" class="filter-btn bg-white text-dusty-500 border border-blush-200 hover:text-blush-500 px-4 py-2 rounded-full font-medium">Resepsi</button>
+            <button onclick="filterPhotos('Bersama Pengantin')" class="filter-btn bg-white text-dusty-500 border border-blush-200 hover:text-blush-500 px-4 py-2 rounded-full font-medium">Bersama Pengantin</button>
+            <button onclick="filterPhotos('Tetamu')" class="filter-btn bg-white text-dusty-500 border border-blush-200 hover:text-blush-500 px-4 py-2 rounded-full font-medium">Tetamu</button>
+        </div>
+
+        <div id="galleryGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+
+        <div id="emptyGallery" class="hidden text-center py-16 bg-white/95 rounded-2xl border border-dashed border-blush-200">
+            <i class="fa-regular fa-image text-4xl text-blush-300 mb-3"></i>
+            <p class="text-dusty-400 text-sm">Belum ada gambar dalam kategori ini. Jadilah yang pertama muat naik!</p>
+        </div>
+    </section>
+
+    <!-- Lightbox Modal -->
+    <div id="lightbox" class="fixed inset-0 z-50 bg-black/90 hidden flex flex-col items-center justify-center p-4">
+        <button onclick="closeLightbox()" class="absolute top-4 right-4 text-white text-3xl p-2 z-10"><i class="fa-solid fa-xmark"></i></button>
+        <div class="max-w-4xl max-h-[85vh] w-full flex flex-col items-center justify-center">
+            <img id="lightboxImg" src="" class="max-h-[70vh] max-w-full object-contain rounded-xl shadow-2xl border border-white/20">
+            <div id="lightboxCaption" class="text-center text-white mt-4 max-w-xl">
+                <span id="lightboxCategory" class="inline-block bg-blush-400 text-white text-[10px] uppercase font-bold px-3 py-0.5 rounded-full mb-1"></span>
+                <p id="lightboxName" class="font-bold text-base text-blush-200"></p>
+                <p id="lightboxMsg" class="text-xs text-gray-300 italic mt-0.5"></p>
+            </div>
+            <div class="mt-4 flex gap-3">
+                <button id="lightboxLikeBtn" class="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-full text-xs backdrop-blur flex items-center gap-2 transition border border-white/20">
+                    <i class="fa-solid fa-heart text-rose-400"></i> <span id="lightboxLikesCount">0</span> Suka
+                </button>
+                <a id="lightboxDownloadBtn" href="" download class="bg-blush-400 hover:bg-blush-500 text-white font-bold px-5 py-2 rounded-full text-xs flex items-center gap-2 shadow-lg transition">
+                    <i class="fa-solid fa-download"></i> Muat Turun
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-5 right-5 z-50 bg-white border border-blush-300 text-rosewood px-5 py-3.5 rounded-xl shadow-xl transition-all duration-300 transform translate-y-20 opacity-0 flex items-center gap-3">
+        <i class="fa-solid fa-circle-check text-blush-400 text-lg"></i>
+        <span id="toastMsg" class="text-xs font-medium">Berjaya!</span>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-white/90 border-t border-blush-200 py-8 px-4 text-center text-dusty-400 text-xs mt-12 z-10 relative">
+        <div class="max-w-xl mx-auto space-y-2">
+            <div class="w-8 h-8 rounded-full border border-gold-400 flex items-center justify-center mx-auto bg-cream">
+                <span class="font-serif-cormorant font-bold gold-gradient-text text-xs">A&E</span>
+            </div>
+            <p class="font-serif-cormorant text-base text-rosewood font-bold">Aiman & Erna</p>
+            <p>Terima kasih atas kehadiran, doa dan kenangan indah buat kami berdua.</p>
+            <p class="text-dusty-300 text-[10px]">2 Januari 2027 • Dewan Kejora Bandar Tenggara, Johor</p>
+        </div>
+    </footer>
+
+    <!-- Main Logic Script -->
+    <script>
+        /* --- FIREBASE CONFIGURATION --- */
+        const firebaseConfig = {
+            apiKey: "AIzaSyAK1BCo5KRfAaO8Pnxq8kls1TN8W439sE0",
+            authDomain: "aimanernaweddings.firebaseapp.com",
+            projectId: "aimanernaweddings",
+            storageBucket: "aimanernaweddings.firebasestorage.app",
+            messagingSenderId: "903105897317",
+            appId: "1:903105897317:web:c8ff41b0fa29024c0ab78c"
+        };
+
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const db = firebase.firestore();
+
+        /* --- Falling Rose Petals Canvas Animation --- */
+        function initPetalAnimation() {
+            const canvas = document.getElementById('petalCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+
+            let width = canvas.width = window.innerWidth;
+            let height = canvas.height = window.innerHeight;
+
+            window.addEventListener('resize', () => {
+                width = canvas.width = window.innerWidth;
+                height = canvas.height = window.innerHeight;
+            });
+
+            const TOTAL_PETALS = 30;
+            const petals = [];
+            const colors = [
+                { fill: 'rgba(232, 165, 152, 0.75)', border: 'rgba(216, 131, 115, 0.85)' },
+                { fill: 'rgba(244, 194, 194, 0.8)',  border: 'rgba(232, 165, 152, 0.9)' },
+                { fill: 'rgba(255, 202, 212, 0.7)',  border: 'rgba(244, 194, 194, 0.85)' },
+                { fill: 'rgba(216, 131, 115, 0.65)', border: 'rgba(184, 91, 75, 0.8)' }
+            ];
+
+            class Petal {
+                constructor() { this.reset(true); }
+                reset(initial = false) {
+                    this.x = Math.random() * width;
+                    this.y = initial ? Math.random() * height : -20;
+                    this.size = Math.random() * 12 + 8;
+                    this.speedY = Math.random() * 0.8 + 0.5;
+                    this.speedX = Math.random() * 0.4 - 0.2;
+                    this.angle = Math.random() * Math.PI * 2;
+                    this.spinSpeed = (Math.random() - 0.5) * 0.02;
+                    this.oscillation = Math.random() * 0.03;
+                    this.oscillationCount = Math.random() * 100;
+                    this.color = colors[Math.floor(Math.random() * colors.length)];
+                }
+                update() {
+                    this.oscillationCount += this.oscillation;
+                    this.y += this.speedY;
+                    this.x += Math.sin(this.oscillationCount) * 0.8 + this.speedX;
+                    this.angle += this.spinSpeed;
+                    if (this.y > height + 30 || this.x < -30 || this.x > width + 30) this.reset(false);
+                }
+                draw() {
+                    ctx.save();
+                    ctx.translate(this.x, this.y);
+                    ctx.rotate(this.angle);
+                    ctx.beginPath();
+                    ctx.moveTo(0, -this.size);
+                    ctx.bezierCurveTo(this.size * 0.8, -this.size * 0.5, this.size, this.size * 0.6, 0, this.size);
+                    ctx.bezierCurveTo(-this.size, this.size * 0.6, -this.size * 0.8, -this.size * 0.5, 0, -this.size);
+                    ctx.closePath();
+                    ctx.fillStyle = this.color.fill;
+                    ctx.fill();
+                    ctx.strokeStyle = this.color.border;
+                    ctx.lineWidth = 0.5;
+                    ctx.stroke();
+                    ctx.restore();
+                }
+            }
+
+            for (let i = 0; i < TOTAL_PETALS; i++) petals.push(new Petal());
+
+            function animatePetals() {
+                ctx.clearRect(0, 0, width, height);
+                petals.forEach(p => { p.update(); p.draw(); });
+                requestAnimationFrame(animatePetals);
+            }
+            animatePetals();
+        }
+
+        let photos = [];
+        let wishes = [];
+        let currentFilter = 'Semua';
+        let ytPlayer = null;
+        let isMusicPlaying = false;
+        let ytPlayerReady = false;
+        let useBackupAudio = false;
+
+        function onYouTubeIframeAPIReady() {
+            try {
+                ytPlayer = new YT.Player('ytAudioPlayer', {
+                    height: '0', width: '0', videoId: 'h1Hx7VmOaC0',
+                    playerVars: { 'autoplay': 0, 'controls': 0, 'loop': 1, 'playlist': 'h1Hx7VmOaC0' },
+                    events: {
+                        'onReady': () => { ytPlayerReady = true; },
+                        'onStateChange': (e) => setMusicUIState(e.data === YT.PlayerState.PLAYING),
+                        'onError': () => { useBackupAudio = true; }
+                    }
+                });
+            } catch (err) { useBackupAudio = true; }
+        }
+
+        function setMusicUIState(playing) {
+            isMusicPlaying = playing;
+            const icon = document.getElementById('musicPlayIcon');
+            const soundWave = document.getElementById('soundWave');
+            const statusText = document.getElementById('musicStatusText');
+
+            if (playing) {
+                icon.className = 'fa-solid fa-pause text-xs';
+                soundWave.classList.remove('paused');
+                if (statusText) statusText.innerText = 'Dimainkan';
+            } else {
+                icon.className = 'fa-solid fa-play text-xs ml-0.5';
+                soundWave.classList.add('paused');
+                if (statusText) statusText.innerText = 'Diberhentikan';
+            }
+        }
+
+        function openInvitation() {
+            const overlay = document.getElementById('openingOverlay');
+            overlay.classList.add('opacity-0', 'pointer-events-none');
+            setTimeout(() => overlay.remove(), 700);
+            toggleMusic();
+        }
+
+        window.onload = function() {
+            initPetalAnimation();
+            initRealtimeSync();
+            initCountdown();
+            setupEventListeners();
+        };
+
+        function initRealtimeSync() {
+            db.collection("wedding_photos").orderBy("createdAt", "desc").onSnapshot((snapshot) => {
+                photos = [];
+                snapshot.forEach((doc) => {
+                    photos.push({ id: doc.id, ...doc.data() });
+                });
+                renderGallery();
+            }, (error) => {
+                console.error("Error getting photos: ", error);
+            });
+
+            db.collection("wedding_wishes").orderBy("createdAt", "desc").onSnapshot((snapshot) => {
+                wishes = [];
+                snapshot.forEach((doc) => {
+                    wishes.push({ id: doc.id, ...doc.data() });
+                });
+                renderWishes();
+            }, (error) => {
+                console.error("Error getting wishes: ", error);
+            });
+        }
+
+        function initCountdown() {
+            const weddingDate = new Date('January 2, 2027 09:00:00').getTime();
+            setInterval(() => {
+                const now = new Date().getTime();
+                const distance = weddingDate - now;
+                if (distance < 0) return;
+                document.getElementById('cd-days').innerText = Math.floor(distance / (1000 * 60 * 60 * 24));
+                document.getElementById('cd-hours').innerText = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                document.getElementById('cd-minutes').innerText = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                document.getElementById('cd-seconds').innerText = Math.floor((distance % (1000 * 60)) / 1000);
+            }, 1000);
+        }
+
+        function toggleMusic() {
+            const backupAudio = document.getElementById('backupAudio');
+            if (isMusicPlaying) {
+                if (useBackupAudio && backupAudio) backupAudio.pause();
+                else if (ytPlayer && ytPlayer.pauseVideo) ytPlayer.pauseVideo();
+                setMusicUIState(false);
+            } else {
+                if (useBackupAudio || !ytPlayerReady) {
+                    backupAudio.play().then(() => setMusicUIState(true)).catch(() => showToast('Tekan sekali lagi untuk memainkan muzik.'));
+                } else if (ytPlayer && ytPlayer.playVideo) {
+                    try { ytPlayer.playVideo(); setMusicUIState(true); } 
+                    catch(e) { backupAudio.play(); setMusicUIState(true); }
+                }
+            }
+        }
+
+        function setupEventListeners() {
+            const dropZone = document.getElementById('dropZone');
+            const fileInput = document.getElementById('fileInput');
+            dropZone.addEventListener('click', () => fileInput.click());
+            fileInput.addEventListener('change', handleFileSelect);
+            document.getElementById('rsvpWishForm').addEventListener('submit', handleRsvpSubmit);
+        }
+
+        function handleFileSelect() {
+            const files = Array.from(document.getElementById('fileInput').files);
+            if (files.length === 0) return;
+            const previewContainer = document.getElementById('previewContainer');
+            previewContainer.innerHTML = '';
+            previewContainer.classList.remove('hidden');
+            document.getElementById('uploadPrompt').classList.add('hidden');
+
+            files.forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const imgWrapper = document.createElement('div');
+                    imgWrapper.className = 'relative aspect-square rounded-xl overflow-hidden border border-blush-200 shadow-sm';
+                    imgWrapper.innerHTML = `<img src="${e.target.result}" class="w-full h-full object-cover">`;
+                    previewContainer.appendChild(imgWrapper);
+                }
+                reader.readAsDataURL(file);
+            });
+        }
+
+        async function uploadToTelegram(event) {
+            event.preventDefault();
+            
+            const token = "8800942714:AAGYWmKTZqzHQI4PBhkIuvuIGgw9mDmu5g8"; 
+            const chatId = "5965855949";
+            
+            const guestName = document.getElementById('guestName').value.trim();
+            const guestCategory = document.getElementById('guestCategory').value;
+            const guestMessage = document.getElementById('guestMessage').value.trim();
+            const fileInput = document.getElementById('fileInput');
+            const files = fileInput.files;
+
+            if (files.length === 0) {
+                showToast('Sila pilih sekurang-kurangnya satu gambar!');
+                return;
+            }
+
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i><span>Sedang Hantar ke Telegram...</span>`;
+
+            let uploadPromises = Array.from(files).map(file => {
+                const formData = new FormData();
+                formData.append('chat_id', chatId);
+                formData.append('photo', file);
+                formData.append('caption', `Nama: ${guestName}\nKategori: ${guestCategory}\nUcapan: ${guestMessage || 'Momen indah bersama Aiman & Erna!'}`);
+               
+                return fetch(`https://api.telegram.org/bot${token}/sendPhoto`, {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(result => {
+                    if (result.ok) {
+                        const photosArray = result.result.photo;
+                        const bestPhoto = photosArray[photosArray.length - 1];
+                        const fileId = bestPhoto.file_id;
+
+                        return fetch(`https://api.telegram.org/bot${token}/getFile?file_id=${fileId}`)
+                            .then(res => res.json())
+                            .then(fileResult => {
+                                if (fileResult.ok) {
+                                    const filePath = fileResult.result.file_path;
+                                    const downloadURL = `https://api.telegram.org/file/bot${token}/${filePath}`;
+
+                                    return db.collection("wedding_photos").add({
+                                        url: downloadURL,
+                                        name: guestName,
+                                        category: guestCategory,
+                                        message: guestMessage || 'Momen indah bersama Aiman & Erna!',
+                                        likes: 0,
+                                        timestamp: 'Baru sahaja',
+                                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                                    });
+                                }
+                            });
+                    } else {
+                        throw new Error('Gagal hantar ke Telegram API');
+                    }
+                });
+            });
+
+            Promise.all(uploadPromises).then(() => {
+                document.getElementById('uploadForm').reset();
+                document.getElementById('previewContainer').classList.add('hidden');
+                document.getElementById('uploadPrompt').classList.remove('hidden');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = `<i class="fa-solid fa-cloud-arrow-up"></i><span>Muat Naik Ke Galeri Awam</span>`;
+                showToast('Gambar berjaya dimuat naik & dikemas kini!');
+                document.getElementById('gallery').scrollIntoView({ behavior: 'smooth' });
+            }).catch(error => {
+                console.error("Error uploading: ", error);
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = `<i class="fa-solid fa-cloud-arrow-up"></i><span>Muat Naik Ke Galeri Awam</span>`;
+                showToast('Gagal memuat naik gambar. Sila semak Token Telegram anda.');
+            });
+        }
+
+        function handleRsvpSubmit(e) {
+            e.preventDefault();
+            const name = document.getElementById('rsvpName').value.trim();
+            const count = document.getElementById('rsvpCount').value;
+            const text = document.getElementById('rsvpWishText').value.trim();
+            const wishSubmitBtn = document.getElementById('wishSubmitBtn');
+
+            wishSubmitBtn.disabled = true;
+            wishSubmitBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Hantar Ucapan...`;
+
+            db.collection("wedding_wishes").add({
+                name: name,
+                count: count,
+                text: text,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            }).then(() => {
+                document.getElementById('rsvpWishForm').reset();
+                wishSubmitBtn.disabled = false;
+                wishSubmitBtn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> Hantar Ucapan`;
+                showToast('Terima kasih! Ucapan anda telah dihantar.');
+            }).catch(error => {
+                console.error("Error adding wish: ", error);
+                wishSubmitBtn.disabled = false;
+                wishSubmitBtn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> Hantar Ucapan`;
+                showToast('Gagal menghantar ucapan.');
+            });
+        }
+
+        // Fungsi untuk kumpul gambar mengikut nama penghantar
+        function renderGallery() {
+            const grid = document.getElementById('galleryGrid');
+    
+    // Tapis mengikut kategori terpilih
+            const filteredPhotos = currentFilter === 'Semua' ? photos : photos.filter(p => p.category === currentFilter);
+    
+    // Kumpulkan gambar mengikut 'name' (penghantar)
+            const groupedByUser = {};
+            filteredPhotos.forEach(photo => {
+            const userName = photo.name || 'Tanpa Nama';
+            if (!groupedByUser[userName]) {
+                groupedByUser[userName] = {
+                name: userName,
+                category: photo.category || 'Tetamu',
+                message: photo.message || '',
+                timestamp: photo.timestamp || 'Baru sahaja',
+                items: [] // Simpan senarai gambar & id untuk nama ni
+            };
+        }
+        groupedByUser[userName].items.push({
+            id: photo.id,
+            url: photo.url,
+            likes: photo.likes || 0
+        });
+    });
+
+    const groupKeys = Object.keys(groupedByUser);
+    document.getElementById('photoCount').innerText = filteredPhotos.length;
+
+    if (groupKeys.length === 0) {
+        grid.innerHTML = '';
+        document.getElementById('emptyGallery').classList.remove('hidden');
+        return;
+    }
+    
+    document.getElementById('emptyGallery').classList.add('hidden');
+
+    // Paparkan kad gaya Instagram
+    grid.innerHTML = groupKeys.map(key => {
+        const group = groupedByUser[key];
+        const isMultiple = group.items.length > 1;
+
+        // Render senarai gambar secara melintang (swipe)
+        const imagesHtml = group.items.map((item, idx) => `
+            <div class="w-full flex-shrink-0 relative aspect-square bg-blush-50 cursor-pointer" onclick="openLightbox('${item.id}')">
+                <img src="${item.url}" class="w-full h-full object-cover">
+                ${isMultiple ? `
+                    <span class="absolute top-3 right-3 bg-black/60 text-white text-[10px] font-bold px-2 py-0.5 rounded-full backdrop-blur-sm">
+                        ${idx + 1}/${group.items.length}
+                    </span>
+                ` : ''}
+            </div>
+        `).join('');
+
+        // Render titik indikator (dots) jika lebih dari 1 gambar
+        const dotsHtml = isMultiple ? `
+            <div class="absolute bottom-3 left-0 right-0 flex justify-center gap-1.5 pointer-events-none z-10">
+                ${group.items.map((_, idx) => `
+                    <span class="dot-indicator-${group.name.replace(/\s+/g, '')} w-1.5 h-1.5 rounded-full transition-all duration-300${idx === 0 ? 'bg-white w-3' : 'bg-white/50'}"></span>
+                `).join('')}
+            </div>
+        ` : '';
+
+        // Ambil jumlah suka (likes) dari gambar pertama atau terkumpul
+        const totalLikes = group.items.reduce((sum, item) => sum + item.likes, 0);
+        const primaryId = group.items[0].id;
+        const primaryUrl = group.items[0].url;
+
+        return `
+            <div class="bg-white/95 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition duration-300 border border-blush-200 flex flex-col group">
+                <!-- Header Kad: Nama & Kategori -->
+                <div class="p-3.5 flex items-center justify-between border-b border-blush-100">
+                    <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 rounded-full bg-blush-100 text-blush-500 border border-blush-200 flex items-center justify-center text-xs font-bold">
+                            ${group.name.charAt(0).toUpperCase()}
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-rosewood text-xs">${escapeHtml(group.name)}</h3>
+                            <span class="text-[9px] text-dusty-400">${group.timestamp}</span>
+                        </div>
+                    </div>
+                    <span class="bg-blush-50 text-blush-500 text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full border border-blush-200">
+                        ${group.category}
+                    </span>
+                </div>
+
+                <!-- Bahagian Gambar Swipe ala Instagram -->
+                <div class="relative overflow-hidden bg-black">
+                    <div id="slider-${group.name.replace(/\s+/g, '')}" 
+                         class="flex overflow-x-auto snap-x snap-mandatory no-scrollbar scroll-smooth"
+                         onscroll="updateDots(this, '${group.name.replace(/\s+/g, '')}', ${group.items.length})">
+                        ${imagesHtml}
+                    </div>
+                    ${dotsHtml}
+                </div>
+
+                <!-- Bahagian Kapsyen & Butang Suka/Simpan -->
+                <div class="p-4 flex-1 flex flex-col justify-between">
+                    <div>
+                        <p class="text-xs text-dusty-600 italic mb-3">"${escapeHtml(group.message)}"</p>
+                    </div>
+                    <div class="flex items-center justify-between border-t border-blush-100 pt-3 mt-auto text-xs">
+                        <button onclick="likePhoto('${primaryId}', ${group.items[0].likes})" class="flex items-center gap-1.5 text-dusty-500 hover:text-rose-500 transition">
+                            <i class="fa-solid fa-heart ${totalLikes > 0 ? 'text-rose-500' : 'text-gray-300'}"></i>
+                            <span class="font-medium">${totalLikes} Suka</span>
+                        </button>
+                        <a href="${primaryUrl}" download class="text-blush-500 hover:text-blush-600 font-semibold flex items-center gap-1 bg-blush-50 hover:bg-blush-100 px-3 py-1 rounded-lg border border-blush-200 transition text-[11px]">
+                            <i class="fa-solid fa-download"></i> Simpan
+                        </a>
+                    </div>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+// Fungsi untuk mengemas kini titik indikator (dots) semasa pengguna swipe gambar ke tepi
+function updateDots(sliderElement, groupKey, totalItems) {
+    const scrollLeft = sliderElement.scrollLeft;
+    const itemWidth = sliderElement.clientWidth;
+    const currentIndex = Math.round(scrollLeft / itemWidth);
+    
+    const dots = document.querySelectorAll(`.dot-indicator-${groupKey}`);
+    dots.forEach((dot, idx) => {
+        if (idx === currentIndex) {
+            dot.className = `dot-indicator-${groupKey} w-3 h-1.5 rounded-full transition-all duration-300 bg-white`;
+        } else {
+            dot.className = `dot-indicator-${groupKey} w-1.5 h-1.5 rounded-full transition-all duration-300 bg-white/50`;
+        }
+    });
+}
+        function renderWishes() {
+            const wishesList = document.getElementById('wishesList');
+            wishesList.innerHTML = wishes.length === 0 
+                ? `<p class="text-center text-xs text-dusty-400 py-4">Belum ada ucapan.</p>` 
+                : wishes.map(wish => `
+                    <div class="bg-cream p-3.5 rounded-xl border border-blush-200 shadow-sm">
+                        <div class="flex items-center justify-between mb-1">
+                            <div class="flex items-center gap-2">
+                                <span class="w-6 h-6 rounded-full bg-blush-100 text-blush-500 border border-blush-200 flex items-center justify-center text-[10px] font-bold">
+                                    ${wish.name ? wish.name.charAt(0).toUpperCase() : 'T'}
+                                </span>
+                                <h4 class="font-bold text-xs text-rosewood">${escapeHtml(wish.name)}</h4>
+                            </div>
+                            <span class="text-[10px] bg-white border border-blush-200 text-dusty-500 px-2 py-0.5 rounded-full font-medium">${escapeHtml(wish.count)}</span>
+                        </div>
+                        <p class="text-xs text-dusty-500 pl-8">${escapeHtml(wish.text)}</p>
+                    </div>
+                `).join('');
+        }
+
+        function filterPhotos(category) {
+            currentFilter = category;
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.className = 'filter-btn bg-white text-dusty-500 border border-blush-200 hover:text-blush-500 px-4 py-2 rounded-full font-medium';
+            });
+            event.target.className = 'filter-btn bg-blush-400 text-white px-4 py-2 rounded-full font-bold shadow-sm';
+            renderGallery();
+        }
+
+        function likePhoto(id, currentLikes) {
+            const newLikes = (currentLikes || 0) + 1;
+            db.collection("wedding_photos").doc(id).update({
+                likes: newLikes
+            }).then(() => {
+                const lightbox = document.getElementById('lightbox');
+                if (!lightbox.classList.contains('hidden')) {
+                    document.getElementById('lightboxLikesCount').innerText = newLikes;
+                }
+            }).catch(error => {
+                console.error("Error updating likes: ", error);
+            });
+        }
+
+        function openLightbox(id) {
+            const photo = photos.find(p => p.id === id);
+            if (!photo) return;
+            document.getElementById('lightboxImg').src = photo.url;
+            document.getElementById('lightboxCategory').innerText = photo.category || 'Tetamu';
+            document.getElementById('lightboxName').innerText = photo.name;
+            document.getElementById('lightboxMsg').innerText = `"${photo.message}"`;
+            document.getElementById('lightboxLikesCount').innerText = photo.likes || 0;
+            document.getElementById('lightboxDownloadBtn').href = photo.url;
+            document.getElementById('lightboxLikeBtn').onclick = () => likePhoto(photo.id, photo.likes || 0);
+            document.getElementById('lightbox').classList.remove('hidden');
+        }
+
+        function closeLightbox() { document.getElementById('lightbox').classList.add('hidden'); }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMsg').innerText = message;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => toast.classList.add('translate-y-20', 'opacity-0'), 3000);
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        }
+    </script>
+</body>
+</html>
